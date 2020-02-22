@@ -48,6 +48,7 @@ class greedyUCB:
         plt.xscale('log')
         plt.xlabel('Iteration')
         plt.ylabel('Cumulative Average')
+        plt.title('Greedy UCB')
         plt.show()
 
         for result in self.results:

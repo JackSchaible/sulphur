@@ -33,6 +33,7 @@ class greedyOptimistic:
         plt.plot(np.ones(self.iterations) * 1)
         plt.plot(np.ones(self.iterations) * 2)
         plt.plot(np.ones(self.iterations) * 3)
+        plt.title('Greedy Optimistic')
         plt.xscale('log')
         plt.xlabel('Iteration')
         plt.ylabel('Cumulative Average')

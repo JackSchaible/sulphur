@@ -40,6 +40,7 @@ class epsilonGreedy:
         plt.plot(np.ones(self.iterations) * 1)
         plt.plot(np.ones(self.iterations) * 2)
         plt.plot(np.ones(self.iterations) * 3)
+        plt.title('ε Greedy')
         plt.xscale('log')
         plt.xlabel('Iteration')
         plt.ylabel('Cumulative Average')
