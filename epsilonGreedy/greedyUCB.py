@@ -1,34 +1,39 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import bandit
+import banditFactory as bf
 
-class epsilonGreedy:
-    def __init__(self, epsilon):
-        self.payoutModifier1 = 1.0
-        self.payoutModifier2 = 2.0
-        self.payoutModifier3 = 3.0
+class result:
+    def __init__(self):
+        self.mean = 10
+        self.n = 0
+
+    def update(self, mean):
+        self.n += 1
+        self.mean = (1 - 1.0/self.n)*self.mean + 1.0/self.n*mean
+
+class greedyUCB:
+    def __init__(self):
         self.iterations = 10000
 
-        self.epsilon = epsilon
-        
-        self.results = [0, 0, 0]
-
-        self.bandits = [bandit.Bandit(self.payoutModifier1), bandit.Bandit(self.payoutModifier2), bandit.Bandit(self.payoutModifier3)]
+        self.results = [result(), result(), result()]
+        self.bandits = bf.banditFactory.create()
         self.data = np.empty(self.iterations)
-        
+
+    def ucb(self, mean, n, nj):
+        if nj == 0:
+            return float('inf')
+        else:
+            return mean + np.sqrt(2*np.log(n) / nj)
 
     def run(self):
         for i in range(self.iterations):
-            p = np.random.random()
+            n = i + 1
 
-            if p < self.epsilon:
-                selectedMachine = np.random.choice(3)
-            else:
-                selectedMachine = np.argmax(self.results)
+            selectedMachine = np.argmax([self.ucb(r.mean, n, r.n) for r in self.results])
 
             result = self.bandits[selectedMachine].pull()
-            n = i + 1
-            self.results[selectedMachine] = (1 - 1.0/n)*self.bandits[selectedMachine].payoutModifier + 1.0/n*result
+            self.results[selectedMachine].update(result)
 
             # for the plot
             self.data[i] = result
@@ -46,6 +51,6 @@ class epsilonGreedy:
         plt.show()
 
         for result in self.results:
-            print(result)
+            print(result.mean)
 
         return cumulative_average
